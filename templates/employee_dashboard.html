@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}IT Employee Workstation Portal{% endblock %}
+{% block content %}
+<header class="navbar">
+    <div class="brand">IT DEPT // WORKSTATION TERMINAL</div>
+    <div class="user-meta">
+        <a class="nav-link" href="/assets">Asset Inventory</a>
+        <span class="badge badge-emp">EMPLOYEE</span>
+        <span class="user-name">{{ user.name }}</span>
+        <button onclick="logout()" class="btn btn-logout">Logout</button>
+    </div>
+</header>
+
+<main class="dashboard-body">
+    <div class="card employee-card">
+        <div class="employee-heading">
+            <div>
+                <p class="eyebrow">Workstation monitor</p>
+                <h2 id="workstationStatus">Loading status...</h2>
+            </div>
+            <span id="workstationBadge" class="badge badge-warning">CHECKING</span>
+        </div>
+        <p id="workstationMessage" class="text-muted">Checking the office network heartbeat.</p>
+        
+        <div class="employee-details">
+            <p><strong>Assigned Workstation:</strong> IT-WS-DEV01</p>
+            <p><strong>Office Network:</strong> <span id="officeNetwork">--</span></p>
+            <p><strong>Systems Available:</strong> <span id="systemsAvailable">--</span></p>
+            <p><strong>Department:</strong> {{ user.department }}</p>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}IT Asset Inventory{% endblock %}
+{% block content %}
+<header class="navbar">
+    <div class="brand">IT DEPT // ASSET CONTROL CELL</div>
+    <div class="user-meta">
+        <a class="nav-link" href="/">Dashboard</a>
+        <span class="badge {% if user.role == 'ADMIN' %}badge-admin{% else %}badge-emp{% endif %}">{{ user.role }}</span>
+        <span class="user-name">{{ user.name }}</span>
+        <button onclick="logout()" class="btn btn-logout">Logout</button>
+    </div>
+</header>
+
+<main class="dashboard-body assets-layout">
+    <section class="card form-card">
+        <div class="table-header"><h3 id="assetFormTitle">Register Asset</h3></div>
+        {% if user.role == 'ADMIN' %}
+        <form id="assetForm" class="asset-form">
+            <label>Asset ID<input name="asset_id" id="assetIdInput" required placeholder="HAL-PC-001"></label>
+            <label>Hostname<input name="hostname" required placeholder="SERVER-01"></label>
+            <label>Serial Number<input name="serial_number" required placeholder="ABC123"></label>
+            <label>Department<input name="department" required placeholder="Avionics"></label>
+            <label>Location<input name="location" required placeholder="LAB-01"></label>
+            <label>Asset Type<input name="asset_type" placeholder="Workstation"></label>
+            <label>Status
+                <select name="status" id="assetStatusInput">
+                    <option value="Active">Active</option>
+                    <option value="In Repair">In Repair</option>
+                    <option value="Retired">Retired</option>
+                </select>
+            </label>
+            <button class="btn btn-primary" type="submit" id="assetFormSubmit">Register Asset</button>
+            <button class="btn btn-logout" type="button" id="assetFormCancel" style="display:none;" onclick="resetAssetForm()">Cancel Edit</button>
+            <p id="assetFormMessage" class="form-message" aria-live="polite"></p>
+        </form>
+        {% else %}
+        <p class="form-note">Your role has read-only access to the asset inventory.</p>
+        {% endif %}
+    </section>
+
+    <section class="card table-card">
+        <div class="table-header asset-table-header">
+            <h3>Asset Inventory</h3>
+            <input id="assetSearch" aria-label="Search assets" placeholder="Search assets">
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Asset ID</th><th>Hostname</th><th>Serial Number</th><th>Department</th>
+                    <th>Location</th><th>Type</th><th>Status</th>
+                    {% if user.role == 'ADMIN' %}<th>Actions</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody id="assetTableBody">
+                <tr><td colspan="{% if user.role == 'ADMIN' %}8{% else %}7{% endif %}" class="text-center">Loading asset inventory...</td></tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+<script>const IS_ADMIN = {{ 'true' if user.role == 'ADMIN' else 'false' }};</script>
+<script src="/static/js/api.js"></script>
+{% endblock %}

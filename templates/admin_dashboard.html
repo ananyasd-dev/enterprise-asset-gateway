@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}IT Admin Portal - Systems & Licences{% endblock %}
+{% block content %}
+<header class="navbar">
+    <div class="brand">IT DEPT // SYSTEM & LICENSE CONTROL CELL</div>
+    <div class="user-meta">
+        <a class="nav-link" href="/assets">Asset Inventory</a>
+        <span class="badge badge-admin">ADMINISTRATOR</span>
+        <span class="user-name">{{ user.name }}</span>
+        <button onclick="logout()" class="btn btn-logout">Logout</button>
+    </div>
+</header>
+
+<main class="dashboard-body">
+    <div class="metrics-grid">
+        <div class="card metric-card">
+            <div class="metric-title">Registered Assets</div>
+            <div class="metric-value text-success" id="m-assets-total">--</div>
+            <div class="metric-sub" id="m-assets-scope">Loading local asset database...</div>
+        </div>
+        <div class="card metric-card">
+            <div class="metric-title">Systems Online</div>
+            <div class="metric-value text-success" id="m-sys-online">--</div>
+            <div class="metric-sub" id="m-sys-total">-- Total Configured</div>
+        </div>
+        <div class="card metric-card">
+            <div class="metric-title">Systems Offline</div>
+            <div class="metric-value text-danger" id="m-sys-offline">--</div>
+            <div class="metric-sub">Action required in IT bay</div>
+        </div>
+        <div class="card metric-card">
+            <div class="metric-title">License Threat Alarms</div>
+            <div class="metric-value text-warning" id="m-lic-threats">--</div>
+            <div class="metric-sub">Expiring in &le; 30 Days</div>
+        </div>
+        <div class="card metric-card">
+            <div class="metric-title">Critical Expired</div>
+            <div class="metric-value text-danger" id="m-lic-expired">--</div>
+            <div class="metric-sub">Immediate deactivation</div>
+        </div>
+    </div>
+
+    <section class="card table-card">
+        <div class="table-header">
+            <h3>📑 Software License Expirations & Seat Health</h3>
+            <span class="text-muted">Calculated live via server clock</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Software Application</th>
+                    <th>Vendor</th>
+                    <th>License Key</th>
+                    <th>Expiry Date</th>
+                    <th>Remaining Days</th>
+                    <th>Seats Allocated</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="licenseTableBody">
+                <tr><td colspan="8" class="text-center">Loading live license database...</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="card form-card">
+        <div class="table-header"><h3 id="licenseFormTitle">Add License</h3></div>
+        <form id="licenseForm" class="asset-form">
+            <label>License ID<input name="id" id="licenseIdInput" required placeholder="LIC-05"></label>
+            <label>Software<input name="software" required placeholder="Adobe Acrobat Pro"></label>
+            <label>License Key<input name="license_key" required placeholder="ADB-1234-X"></label>
+            <label>Vendor<input name="vendor" required placeholder="Adobe"></label>
+            <label>Expiry (YYYY-MM-DD)<input name="expiry" required placeholder="2027-01-31"></label>
+            <label>Seats Total<input name="seats_total" type="number" min="0" required></label>
+            <label>Seats Used<input name="seats_used" type="number" min="0" required></label>
+            <button class="btn btn-primary" type="submit" id="licenseFormSubmit">Add License</button>
+            <button class="btn btn-logout" type="button" id="licenseFormCancel" style="display:none;" onclick="resetLicenseForm()">Cancel Edit</button>
+            <p id="licenseFormMessage" class="form-message" aria-live="polite"></p>
+        </form>
+    </section>
+
+    <section class="card table-card">
+        <div class="table-header">
+            <h3>🖥️ IT Office Hardware & Host Nodes</h3>
+            <span class="text-muted">Online / Offline Realtime Heartbeat</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Hostname</th>
+                    <th>IP Address</th>
+                    <th>Operating System</th>
+                    <th>Office Location</th>
+                    <th>State</th>
+                    <th>Heartbeat</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="systemTableBody">
+                <tr><td colspan="7" class="text-center">Scanning network nodes...</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="card form-card">
+        <div class="table-header"><h3>Register System to Monitor</h3></div>
+        <form id="systemForm" class="asset-form">
+            <label>Hostname<input name="hostname" required placeholder="IT-WS-DEV03"></label>
+            <label>IP Address / Host<input name="ip_address" required placeholder="192.168.1.50"></label>
+            <label>Operating System<input name="os" placeholder="Windows 11 Pro"></label>
+            <label>Location<input name="location" placeholder="IT Bay Desk 3"></label>
+            <button class="btn btn-primary" type="submit">Register System</button>
+            <p id="systemFormMessage" class="form-message" aria-live="polite"></p>
+        </form>
+    </section>
+</main>
+{% endblock %}
